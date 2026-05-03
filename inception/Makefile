@@ -1,24 +1,28 @@
 NAME = inception
 COMPOSE = docker compose -f Srcs/docker-compose.yml
 
-all:
-	$(COMPOSE) up --build
+DATA_PATH = /home/tcoeffet/data
+DB_PATH = $(DATA_PATH)/mariadb
+WP_PATH = $(DATA_PATH)/wordpress
 
-up:
-	$(COMPOSE) up
+all:
+	mkdir -p $(DB_PATH) $(WP_PATH)
+	$(COMPOSE) up --build -d
 
 build:
 	$(COMPOSE) build --no-cache
 
-down:
-	$(COMPOSE) down
-
 clean:
-	$(COMPOSE) down -v
-
-fclean: clean
+	$(COMPOSE) down
 	docker system prune -af
 
-re: clean all
+fclean: 
+	$(COMPOSE) down -v --rmi all
+	docker system prune -af
+	sudo rm -rf $(DATA_PATH)
 
-.PHONY: all up build down clean fclean re
+re: 
+	$(MAKE) fclean
+	$(MAKE) all
+
+.PHONY: all up build down clean fclean re 

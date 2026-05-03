@@ -1,8 +1,7 @@
 services:
   mariadb:
     build: ./requirements/mariadb/
-    image: mariadb
-    container_name: mariadb
+    image: inception_mariadb
     volumes:
       - mdb_db:/var/lib/mysql
     environment:
@@ -12,24 +11,31 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     networks:
       - inception
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "--silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
   wordpress:
     build: ./requirements/wordpress
-    image: wordpress
-    container_name: wordpress
+    image: inception_wordpress
     volumes:
       - wordpress_shared:/var/www/html
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     environment:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
-      - WP_ADMIN_USER=admin
-      - WP_ADMIN_PASSWORD=adminpass
-      - WP_ADMIN_EMAIL=admin@tcoeffet.42.fr
+      - WP_ADMIN_USER=${WP_ADMIN_USER}
+      - WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD}
+      - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
     networks:
       - inception
+    restart: always
   nginx:
     depends_on:
       - wordpress
@@ -37,11 +43,11 @@ services:
       - 443:443
     build: ./requirements/nginx
     image: inception_nginx
-    container_name: nginx
     volumes:
       - wordpress_shared:/var/www/html
     networks:
       - inception
+    restart: always
 
 networks:
   inception:
@@ -49,4 +55,14 @@ networks:
 
 volumes:
   mdb_db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/tcoeffet/data/mariadb
   wordpress_shared:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/tcoeffet/data/wordpress

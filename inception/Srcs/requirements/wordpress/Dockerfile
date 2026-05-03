@@ -14,7 +14,6 @@ php83-mbstring \
 php83-iconv \
 php83-xml \
 php83-curl \
-php83-phar \
 php83-openssl
 #geting all the packages
 RUN mkdir -p /var/www/html/
