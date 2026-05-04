@@ -33,6 +33,13 @@ if ! wp core is-installed --path=/var/www/html; then
       --admin_email="$WP_ADMIN_EMAIL" \
       --allow-root \
       --skip-email
+    if ! wp user get "$WP_USER_NAME" --path=/var/www/html --allow-root >/dev/null 2>&1; then
+        wp user create "$WP_USER_NAME" "$WP_USER_EMAIL" \
+        --role=subscriber \
+        --user_pass="$WP_USER_PASSWORD" \
+        --path=/var/www/html \
+        --allow-root
+    fi
 fi
 
 sed -i 's|listen = .*|listen = 0.0.0.0:9000|' /etc/php83/php-fpm.d/www.conf
