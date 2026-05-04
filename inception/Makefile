@@ -5,9 +5,15 @@ DATA_PATH = /home/tcoeffet/data
 DB_PATH = $(DATA_PATH)/mariadb
 WP_PATH = $(DATA_PATH)/wordpress
 
-all:
-	mkdir -p $(DB_PATH) $(WP_PATH)
+all: prepare
 	$(COMPOSE) up --build -d
+
+prepare:
+	mkdir -p $(DB_PATH) $(WP_PATH)
+	sudo chown -R 999:999 $(DB_PATH)
+	sudo chmod -R 750 $(DB_PATH)
+	sudo chown -R 82:82 $(WP_PATH)
+	sudo chmod -R 750 $(WP_PATH)
 
 build:
 	$(COMPOSE) build --no-cache
