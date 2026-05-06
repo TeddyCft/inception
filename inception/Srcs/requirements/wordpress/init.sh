@@ -42,7 +42,7 @@ if ! wp core is-installed --path=/var/www/html; then
     fi
 fi
 
-sed -i 's|listen = .*|listen = 0.0.0.0:9000|' /etc/php83/php-fpm.d/www.conf
+sed -i 's|listen = .*|listen = 0.0.0.0:1090|' /etc/php83/php-fpm.d/www.conf
 
 exec php-fpm83 -F
 
