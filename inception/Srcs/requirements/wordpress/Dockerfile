@@ -30,7 +30,7 @@ RUN wget https://wordpress.org/wordpress-6.9.3.tar.gz && \
     mv wp-cli.phar /usr/local/bin/wp
     #geting wp-cli to initialize the web site
 
-EXPOSE 1090
+EXPOSE 9000
 COPY init.sh /init.sh
 COPY demo.php /var/www/html/demo.php
 

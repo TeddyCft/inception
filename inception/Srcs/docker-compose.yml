@@ -44,7 +44,7 @@ services:
     depends_on:
       - wordpress
     ports:
-      - 443:80
+      - 443:443
     build: ./requirements/nginx
     image: inception_nginx
     volumes:

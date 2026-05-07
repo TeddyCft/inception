@@ -15,8 +15,17 @@ prepare:
 	sudo chown -R 82:82 $(WP_PATH)
 	sudo chmod -R 750 $(WP_PATH)
 
+down:
+	$(COMPOSE) down
+
+downv: 
+	$(COMPOSE) down -v
+
 build:
 	$(COMPOSE) build --no-cache
+
+up:
+	$(COMPOSE) up
 
 clean:
 	$(COMPOSE) down
